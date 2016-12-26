@@ -1,0 +1,28 @@
+extends ./layout
+
+block body
+    .index
+        md-toolbar.md-whiteframe-4dp
+            .md-toolbar-tools
+                md-button.md-icon-button(aria-label='Show Menu', ng-click='app.toggleMenu()')
+                    md-icon(md-svg-icon='images/menu.svg')
+                h3
+                    span botalytics
+                div(flex)
+                md-button.md-raised(ng-click='app.logout()') Sign Out
+
+        div(flex, layout='row')
+            md-sidenav(md-component-id='menu', ng-click='app.toggleMenu()')
+                md-toolbar.md-whiteframe-4dp
+                    .md-toolbar-tools
+                        h3
+                            span MENU
+                md-list(flex)
+                    md-list-item(ng-repeat='menuItem in app.menuItems' ng-href='{{ menuItem.url }}')
+                        h3.md-title {{ menuItem.label }}
+                    md-divider
+                    md-list-item(ng-click='app.changePassword($event)')
+                        h3.md-title Change Password
+                    md-list-item(ng-click='app.logout()')
+                        h3.md-title Sign Out
+            md-content(ng-view, autoscroll, flex)

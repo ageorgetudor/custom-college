@@ -1,0 +1,22 @@
+extends ./layout
+
+block body
+    md-content.login(ng-controller='LoginController as self', ng-cloak, layout='column', layout-align='top center', layout-fill, md-theme="white-background")
+
+        .login-box.md-whiteframe-4dp
+            md-toolbar
+                .md-toolbar-tools
+                    h3
+                        span Sign In
+            .md-padding
+                form(ng-submit='self.login()')
+                    md-input-container.md-block
+                        label Username or Email
+                        input(type='text', ng-model='self.user.identifier', md-autofocus, required)
+                    md-input-container.md-block
+                        label Password
+                        input(type='password', ng-model='self.user.password', autocomplete='off', required)
+                    div(flex, layout='column', layout-align='center center')
+                        .error(ng-show='self.loginFailure') Username and password not found
+                    div(layout="row" layout-align="center center", flex)
+                        md-button.md-raised.md-primary(type='submit', flex) Sign In
