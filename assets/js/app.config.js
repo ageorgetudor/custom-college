@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics').config(configure);
+	angular.module('sailsAngularMaterialStarter').config(configure);
 
 	configure.$inject = ['$httpProvider', '$routeProvider'];
 

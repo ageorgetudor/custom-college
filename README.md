@@ -18,12 +18,26 @@ a [Sails](http://sailsjs.org) application
 0. SASS
  * `gem install sass`
 
-## To Install:
+## Install
 0. Clone the repository:
 0. Run `npm install`
 0. Run `bower install`
 
-## To Run:
+## Run
 
 0. Run `sails lift` for development on port 1337
 0. Open a browser, go to http://localhost:1337
+
+## Configure
+* Run a global find and replace for `SailsAngularMaterialStarter` and replace with your project name.
+* Add the following to `config/local.js` to configure the default admin account:
+```javascript
+module.exports = {
+        permissions: {
+                adminUsername: 'admin',
+                adminEmail: 'admin@email.com',
+                adminPassword: 'admin1234'
+        }
+};
+
+```

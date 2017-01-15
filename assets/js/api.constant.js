@@ -1,5 +1,5 @@
 (function () {
-	angular.module('botalytics').constant('api', {
+	angular.module('sailsAngularMaterialStarter').constant('api', {
 		login: '/auth/local',
 		logout: '/auth/logout',
 		users: '/user',

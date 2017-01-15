@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics').factory('userService', userService);
+	angular.module('sailsAngularMaterialStarter').factory('userService', userService);
 
 	userService.$inject = ['$http', 'api'];
 

@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics').controller('AppController', AppController);
+	angular.module('sailsAngularMaterialStarter').controller('AppController', AppController);
 
 	AppController.$inject = ['$window', '$mdSidenav', '$mdDialog', 'loginService'];
 

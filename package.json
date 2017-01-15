@@ -1,5 +1,5 @@
 {
-  "name": "botalytics",
+  "name": "sailsAngularMaterialStarter",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -39,7 +39,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/a052240/botalytics.git"
+    "url": "git://github.com/a052240/sailsAngularMaterialStarter.git"
   },
   "author": "a052240",
   "license": ""

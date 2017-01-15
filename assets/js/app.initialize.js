@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics').run(runBlock);
+	angular.module('sailsAngularMaterialStarter').run(runBlock);
 
 	runBlock.$inject = ['$rootScope'];
 

@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics').controller('PasswordController', PasswordController);
+	angular.module('sailsAngularMaterialStarter').controller('PasswordController', PasswordController);
 
 	PasswordController.$inject = ['$mdDialog', '$mdToast', 'userService'];
 

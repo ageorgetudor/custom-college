@@ -1,5 +1,5 @@
 (function() {
-	angular.module('botalytics', [
+	angular.module('sailsAngularMaterialStarter', [
 		'ngAria',
 		'ngAnimate',
 		'ngMessages',
