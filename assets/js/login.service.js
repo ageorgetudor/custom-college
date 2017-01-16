@@ -5,36 +5,41 @@
 
 	function loginService($q, $http, api) {
 
-		var currentUser;
+		var observerCallbacks = [];
 
 		return {
 			login: login,
 			logout: logout,
-			getAuthenticatedUser: getAuthenticatedUser
+			registerObserverCallback: registerObserverCallback
 		};
 
-		function getAuthenticatedUser() {
-			return currentUser;
-		}
-
-		function setAuthenticatedUser(user) {
-			currentUser = user;
-		}
 
 		function login(user) {
 			return $http.post(api.login, user)
 				.then(function(response) {
-					var authenticatedUser = response.data;
-					setAuthenticatedUser(authenticatedUser);
-					return authenticatedUser;
+					notifyObservers(true);
+					return response.data;
 				})
 				.catch(function () {
 					return $q.reject();
 				});
 		}
 
+		function registerObserverCallback(callback) {
+			observerCallbacks.push(callback);
+		}
+
+		function notifyObservers(isAuthenticated) {
+			angular.forEach(observerCallbacks, function(callback) {
+				callback(isAuthenticated);
+			});
+		}
+
 		function logout() {
-			return $http.post(api.logout);
+			return $http.post(api.logout)
+				.then(function() {
+					notifyObservers(false);
+				});
 		}
 	}
 })();

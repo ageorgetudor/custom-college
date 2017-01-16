@@ -12,6 +12,7 @@
 			getMe: getMe,
 			changePassword:changePassword,
 			getMyPermissions: getMyPermissions,
+			getUsersPaginated: getUsersPaginated
 		};
 
 		function returnData(response) {
@@ -23,7 +24,7 @@
 		}
 
 		function getUser(id) {
-			return $http.get(api.user(id)).then(returnData);
+			return $http.get(api.userDetails(id)).then(returnData);
 		}
 
 		function save(user) {
@@ -52,6 +53,28 @@
 
 		function getMe() {
 			return $http.get(api.me).then(returnData);
+		}
+
+		function getUsersPaginated(page, name, email, username, role) {
+			var params = {};
+
+			if (name) {
+				params.name = name;
+			}
+
+			if (email) {
+				params.email = email;
+			}
+
+			if (username) {
+				params.username = username;
+			}
+
+			if (role) {
+				params.role = role;
+			}
+
+			return $http.get(api.usersPaginated(page), { params: params }).then(returnData);
 		}
 	}
 })();

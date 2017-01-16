@@ -1,0 +1,46 @@
+- var requiredMessage = 'This field is required.'
+
+.user
+    md-dialog(aria-label='User')
+        md-toolbar.md-toolbar-tools
+            h3 {{ vm.isCreate ? 'Create' : 'Update' }} {{ vm.isProfile ? 'Profile' : 'User' }}
+            div(flex)
+            md-button.md-icon-button(ng-click='vm.cancel()')
+                md-icon(md-svg-src='images/clear.svg', aria-label='Close dialog')
+
+        md-dialog-content(layout-padding)
+            form.flex.flex-col(layout='column', novalidate, name='form', data-ng-submit='vm.save()')
+                md-input-container.md-block
+                    label User Name
+                    input(type='text', name='username', ng-model='vm.user.username', required)
+                    .error(ng-messages='form.username.$error', ng-show='form.username.$touched')
+                        ng-message(when='required') #{ requiredMessage }
+
+                md-input-container.md-block
+                    label Full Name
+                    input(type='text', name='name', ng-model='vm.user.name', required)
+                    .error(ng-messages='form.name.$error', ng-show='form.name.$touched')
+                        ng-message(when='required') #{ requiredMessage }
+
+                md-input-container.md-block
+                    label Email Address
+                    input(name='email', type='text', ng-model='vm.user.email', required, ng-pattern='/^[_a-z0-9]+(.[_a-z0-9]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/')
+                    .error(ng-messages='form.email.$error', ng-show='form.email.$touched')
+                        ng-message(when='required') #{ requiredMessage }
+                        ng-message(when='pattern') Valid email address is required
+
+                md-input-container.md-block(ng-show='vm.isCreate')
+                    label Password
+                    input.form-control(name='password', type='password', ng-model='vm.user.password', ng-required='vm.isCreate')
+                    .error(ng-messages='form.password.$error', ng-show='form.password.$touched')
+                        ng-message(when='required') #{ requiredMessage }
+
+                div(layout='row', layout-wrap)
+                    div(ng-repeat='role in vm.roles', ng-show='role.name != "registered"')
+                        md-checkbox(ng-model='role.selected')
+                            .role {{ role.name | capitalize }}
+        md-dialog-actions
+            md-button.md-primary(ng-click='vm.cancel()') Cancel
+            md-button.md-primary(ng-disabled='form.$invalid', ng-click='vm.save()') Save
+
+

@@ -34,5 +34,7 @@ module.exports.routes = {
 
 	'/': 'IndexController.index',
 	'/login': { view: 'login'},
-	'/my-permissions': 'IndexController.myPermissions'
+	'/my-permissions': 'IndexController.myPermissions',
+	'/user/:id/details': 'UserController.details',
+	'/user/page/:page': 'UserController.paginated'
 };

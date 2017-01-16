@@ -649,7 +649,7 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
      * ----------------------------------------------------------------------
      */
     function SailsSocket (opts){
-      var self = this;
+      var vm = this;
       opts = opts||{};
 
       // Set up connection options so that they can only be changed when socket is disconnected.
@@ -660,18 +660,18 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
         Object.defineProperty(self, option, {
           get: function() {
             if (option == 'url') {
-              return _opts[option] || (self._raw && self._raw.io && self._raw.io.uri);
+              return _opts[option] || (vm._raw && vm._raw.io && vm._raw.io.uri);
             }
             return _opts[option];
           },
           set: function(value) {
             // Don't allow value to be changed while socket is connected
-            if (self.isConnected() && io.sails.strict !== false && value != _opts[option]) {
+            if (vm.isConnected() && io.sails.strict !== false && value != _opts[option]) {
               throw new Error('Cannot change value of `' + option + '` while socket is connected.');
             }
             // If socket is attempting to reconnect, stop it.
-            if (self._raw && self._raw.io && self._raw.io.reconnecting && !self._raw.io.skipReconnect) {
-              self._raw.io.skipReconnect = true;
+            if (vm._raw && vm._raw.io && vm._raw.io.reconnecting && !vm._raw.io.skipReconnect) {
+              vm._raw.io.skipReconnect = true;
               consolog('Stopping reconnect; use .reconnect() to connect socket after changing options.');
             }
             _opts[option] = value;
@@ -687,12 +687,12 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
       });
 
       // Set up "eventQueue" to hold event handlers which have not been set on the actual raw socket yet.
-      self.eventQueue = {};
+      vm.eventQueue = {};
 
       // Listen for special `parseError` event sent from sockets hook on the backend
       // if an error occurs but a valid callback was not received from the client
       // (i.e. so the server had no other way to send back the error information)
-      self.on('sails:parseError', function (err){
+      vm.on('sails:parseError', function (err){
         consolog('Sails encountered an error parsing a socket message sent from this client, and did not have access to a callback function to respond with.');
         consolog('Error details:',err);
       });
@@ -714,9 +714,9 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
      * @api private
      */
     SailsSocket.prototype._connect = function (){
-      var self = this;
+      var vm = this;
 
-      self.isConnecting = true;
+      vm.isConnecting = true;
 
       // Apply `io.sails` config as defaults
       // (now that at least one tick has elapsed)
@@ -729,22 +729,22 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
       });
 
       // Headers that will be sent with the initial request to /socket.io (Node.js only)
-      self.extraHeaders = self.initialConnectionHeaders || {};
+      vm.extraHeaders = vm.initialConnectionHeaders || {};
 
       // Log a warning if non-Node.js platform attempts to use `initialConnectionHeaders`
-      if (self.initialConnectionHeaders && SDK_INFO.platform !== 'node') {
+      if (vm.initialConnectionHeaders && SDK_INFO.platform !== 'node') {
         if (typeof console === 'object' && typeof console.warn === 'function') {
           console.warn('initialConnectionHeaders option available in Node.js only!');
         }
       }
 
       // Ensure URL has no trailing slash
-      self.url = self.url ? self.url.replace(/(\/)$/, '') : undefined;
+      vm.url = vm.url ? vm.url.replace(/(\/)$/, '') : undefined;
 
       // Mix the current SDK version into the query string in
       // the connection request to the server:
-      if (typeof self.query !== 'string') self.query = SDK_INFO.versionString;
-      else self.query += '&' + SDK_INFO.versionString;
+      if (typeof vm.query !== 'string') vm.query = SDK_INFO.versionString;
+      else vm.query += '&' + SDK_INFO.versionString;
 
       // Determine whether this is a cross-origin socket by examining the
       // hostname and port on the `window.location` object.  If it's cross-origin,
@@ -763,27 +763,27 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
           return false;
         }
 
-        // If `self.url` (aka "target") is falsy, then we don't need to worry about it.
-        if (typeof self.url !== 'string') { return false; }
+        // If `vm.url` (aka "target") is falsy, then we don't need to worry about it.
+        if (typeof vm.url !== 'string') { return false; }
 
-        // Get information about the "target" (`self.url`)
+        // Get information about the "target" (`vm.url`)
         var targetProtocol = (function (){
           try {
-            targetProtocol = self.url.match(/^([a-z]+:\/\/)/i)[1].toLowerCase();
+            targetProtocol = vm.url.match(/^([a-z]+:\/\/)/i)[1].toLowerCase();
           }
           catch (e) {}
           targetProtocol = targetProtocol || 'http://';
           return targetProtocol;
         })();
-        var isTargetSSL = !!self.url.match('^https');
+        var isTargetSSL = !!vm.url.match('^https');
         var targetPort = (function (){
           try {
-            return self.url.match(/^[a-z]+:\/\/[^:]*:([0-9]*)/i)[1];
+            return vm.url.match(/^[a-z]+:\/\/[^:]*:([0-9]*)/i)[1];
           }
           catch (e){}
           return isTargetSSL ? '443' : '80';
         })();
-        var targetAfterProtocol = self.url.replace(/^([a-z]+:\/\/)/i, '');
+        var targetAfterProtocol = vm.url.replace(/^([a-z]+:\/\/)/i, '');
 
 
         // If target protocol is different than the actual protocol,
@@ -826,15 +826,15 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
         //
         // Otherwise, skip the stuff below.
         //
-        if (!(self.useCORSRouteToGetCookie && isXOrigin)) {
+        if (!(vm.useCORSRouteToGetCookie && isXOrigin)) {
           return cb();
         }
 
         // Figure out the x-origin CORS route
         // (Sails provides a default)
-        var xOriginCookieURL = self.url;
-        if (typeof self.useCORSRouteToGetCookie === 'string') {
-          xOriginCookieURL += self.useCORSRouteToGetCookie;
+        var xOriginCookieURL = vm.url;
+        if (typeof vm.useCORSRouteToGetCookie === 'string') {
+          xOriginCookieURL += vm.useCORSRouteToGetCookie;
         }
         else {
           xOriginCookieURL += '/__getcookie';
@@ -850,18 +850,18 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
 
         // Now that we're ready to connect, create a raw underlying Socket
         // using Socket.io and save it as `_raw` (this will start it connecting)
-        self._raw = io(self.url, self);
+        vm._raw = io(vm.url, self);
 
         // Replay event bindings from the eager socket
-        self.replay();
+        vm.replay();
 
 
         /**
          * 'connect' event is triggered when the socket establishes a connection
          *  successfully.
          */
-        self.on('connect', function socketConnected() {
-          self.isConnecting = false;
+        vm.on('connect', function socketConnected() {
+          vm.isConnecting = false;
           consolog.noPrefix(
             '\n' +
             '\n' +
@@ -881,17 +881,17 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
           );
         });
 
-        self.on('disconnect', function() {
-          self.connectionLostTimestamp = (new Date()).getTime();
+        vm.on('disconnect', function() {
+          vm.connectionLostTimestamp = (new Date()).getTime();
           consolog('====================================');
           consolog('Socket was disconnected from Sails.');
           consolog('Usually, this is due to one of the following reasons:' + '\n' +
-            ' -> the server ' + (self.url ? self.url + ' ' : '') + 'was taken down' + '\n' +
+            ' -> the server ' + (vm.url ? vm.url + ' ' : '') + 'was taken down' + '\n' +
             ' -> your browser lost internet connectivity');
           consolog('====================================');
         });
 
-        self.on('reconnecting', function(numAttempts) {
+        vm.on('reconnecting', function(numAttempts) {
           consolog(
             '\n'+
             '        Socket is trying to reconnect to Sails...\n'+
@@ -900,11 +900,11 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
           );
         });
 
-        self.on('reconnect', function(transport, numAttempts) {
-          if (!self.isConnecting) {
-            self.on('connect', runRequestQueue.bind(self, self));
+        vm.on('reconnect', function(transport, numAttempts) {
+          if (!vm.isConnecting) {
+            vm.on('connect', runRequestQueue.bind(self, self));
           }
-          var msSinceConnectionLost = ((new Date()).getTime() - self.connectionLostTimestamp);
+          var msSinceConnectionLost = ((new Date()).getTime() - vm.connectionLostTimestamp);
           var numSecsOffline = (msSinceConnectionLost / 1000);
           consolog(
             '\n'+
@@ -917,8 +917,8 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
         // 'error' event is triggered if connection can not be established.
         // (usually because of a failed authorization, which is in turn
         // usually due to a missing or invalid cookie)
-        self.on('error', function failedToConnect(err) {
-          self.isConnecting = false;
+        vm.on('error', function failedToConnect(err) {
+          vm.isConnecting = false;
           ////////////////////////////////////////////////////////////////////////////////////
           // Note:
           // In the future, we could provide a separate event for when a socket cannot connect
@@ -988,22 +988,22 @@ message:4,upgrade:5,noop:6},s=i(r),t={type:"error",data:"parser error"},u=a("blo
      * @return {[type]} [description]
      */
     SailsSocket.prototype.replay = function (){
-      var self = this;
+      var vm = this;
 
       // Pass events and a reference to the request queue
-      // off to the self._raw for consumption
-      for (var evName in self.eventQueue) {
-        for (var i in self.eventQueue[evName]) {
-          self._raw.on(evName, self.eventQueue[evName][i]);
+      // off to the vm._raw for consumption
+      for (var evName in vm.eventQueue) {
+        for (var i in vm.eventQueue[evName]) {
+          vm._raw.on(evName, vm.eventQueue[evName][i]);
         }
       }
 
       // Bind a one-time function to run the request queue
-      // when the self._raw connects.
-      if ( !self.isConnected() ) {
-        self._raw.once('connect', runRequestQueue.bind(self, self));
+      // when the vm._raw connects.
+      if ( !vm.isConnected() ) {
+        vm._raw.once('connect', runRequestQueue.bind(self, self));
       }
-      // Or run it immediately if self._raw is already connected
+      // Or run it immediately if vm._raw is already connected
       else {
         runRequestQueue(self);
       }

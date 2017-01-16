@@ -4,18 +4,18 @@
 	LoginController.$inject = ['$window', 'loginService'];
 
 	function LoginController($window, loginService) {
-		var self = this;
+		var vm = this;
 
-		self.login = login;
-		self.user = {};
+		vm.login = login;
+		vm.user = {};
 
 		function login() {
-			loginService.login(self.user)
+			loginService.login(vm.user)
 				.then(function() {
 					$window.location.href = '/';
 				})
 				.catch(function() {
-					self.loginFailure = true;
+					vm.loginFailure = true;
 				});
 		}
 	}

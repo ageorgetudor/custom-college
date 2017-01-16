@@ -1,7 +1,7 @@
 
 # Sails Angular Material Starter App
 
-a [Sails](http://sailsjs.org) application
+This is a Sails.js application that uses Jade, Bower, SASS, and MongoDB.
 
 ## Requirements:
 0. Node Package Manager (https://nodejs.org/en/)
@@ -30,6 +30,7 @@ a [Sails](http://sailsjs.org) application
 
 ## Configure
 * Run a global find and replace for `SailsAngularMaterialStarter` and replace with your project name.
+* Refer to the `sails-auth` and `sails-permissions` Github pages to configure roles and permissions.
 * Add the following to `config/local.js` to configure the default admin account:
 ```javascript
 module.exports = {

@@ -1,0 +1,13 @@
+.users, .user {
+  .role {
+    text-transform: capitalize;
+    margin-right: 20px;
+  }
+}
+
+.user {
+   md-dialog {
+     max-width: 480px;
+     width: 480px;
+   }
+}
