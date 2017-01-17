@@ -9,6 +9,7 @@
 
 		vm.page = 1;
 		vm.edit = edit;
+		vm.remove = remove;
 		vm.nextPage = nextPage;
 		vm.previousPage = previousPage;
 		vm.filterChanged = filterChanged;
@@ -72,6 +73,18 @@
 				targetEvent: event,
 				clickOutsideToClose: true,
 				onRemoving: getUsers
+			});
+		}
+
+
+		function remove(user) {
+			var confirm = $mdDialog.confirm()
+				.title('Delete User?')
+				.ok('Delete')
+				.cancel('Cancel');
+
+			$mdDialog.show(confirm).then(function() {
+				userService.remove(user).then(getUsers);
 			});
 		}
 

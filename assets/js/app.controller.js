@@ -15,36 +15,20 @@
 		vm.menuItems = [
 			{
 				label: 'Manage Users',
-				url: '#/users'
+				url: '#/users',
+				requiredPermission: 'canCreateUser'
 			}
 		];
 
-		getUserInfo();
-		loginService.registerObserverCallback(function(isAuthenticated) {
-			if (isAuthenticated) {
-				getUserInfo();
-			}
-			else {
-				$rootScope.currentUser = undefined;
-				vm.permissions = undefined;
-			}
-		});
-
-		function getUserInfo() {
-			userService.getMe().then(function (user) {
+		userService.getMe()
+			.then(function (user) {
 				$rootScope.currentUser = user;
 			});
-			userService.getMyPermissions()
-				.then(function (permissions) {
-					vm.permissions = permissions;
-					vm.isAuthenticated = true;
-				})
-				.catch(function () {
-					vm.permissions = undefined;
-					vm.isAuthenticated = false;
 
-				});
-		}
+		userService.getMyPermissions()
+			.then(function (permissions) {
+				$rootScope.permissions = permissions;
+			});
 
 		function toggleSideMenu() {
 			$mdSidenav('menu').toggle();
@@ -72,7 +56,7 @@
 				templateUrl: 'password.html',
 				parent: angular.element(document.body),
 				targetEvent: event,
-				clickOutsideToClose:true,
+				clickOutsideToClose:true
 			});
 		}
 

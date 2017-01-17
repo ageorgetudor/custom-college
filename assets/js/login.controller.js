@@ -7,7 +7,6 @@
 		var vm = this;
 
 		vm.login = login;
-		vm.user = {};
 
 		function login() {
 			loginService.login(vm.user)

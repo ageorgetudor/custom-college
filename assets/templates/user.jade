@@ -3,7 +3,7 @@
 .user
     md-dialog(aria-label='User')
         md-toolbar.md-toolbar-tools
-            h3 {{ vm.isCreate ? 'Create' : 'Update' }} {{ vm.isProfile ? 'Profile' : 'User' }}
+            h3 {{ !vm.user.id ? 'Create' : 'Update' }} {{ vm.isProfile ? 'Profile' : 'User' }}
             div(flex)
             md-button.md-icon-button(ng-click='vm.cancel()')
                 md-icon(md-svg-src='images/clear.svg', aria-label='Close dialog')
@@ -29,9 +29,9 @@
                         ng-message(when='required') #{ requiredMessage }
                         ng-message(when='pattern') Valid email address is required
 
-                md-input-container.md-block(ng-show='vm.isCreate')
+                md-input-container.md-block(ng-show='!vm.user.id')
                     label Password
-                    input.form-control(name='password', type='password', ng-model='vm.user.password', ng-required='vm.isCreate')
+                    input.form-control(name='password', type='password', ng-model='vm.user.password', ng-required='!vm.user.id')
                     .error(ng-messages='form.password.$error', ng-show='form.password.$touched')
                         ng-message(when='required') #{ requiredMessage }
 
@@ -41,6 +41,6 @@
                             .role {{ role.name | capitalize }}
         md-dialog-actions
             md-button.md-primary(ng-click='vm.cancel()') Cancel
-            md-button.md-primary(ng-disabled='form.$invalid', ng-click='vm.save()') Save
+            md-button.md-primary.md-raised(ng-disabled='form.$invalid', ng-click='vm.save()') Save
 
 

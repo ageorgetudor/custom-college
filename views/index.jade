@@ -14,7 +14,7 @@ block body
                         md-icon.md-menu-origin(md-svg-icon='images/dropdown.svg')
                     md-menu-content(width='4')
                         md-menu-item
-                            md-button(ng-click='app.editProfile()') Edit Profile
+                            md-button(ng-click='app.editProfile($event)') Edit Profile
                         md-menu-item
                             md-button(ng-click='app.changePassword($event)') Change Password
                         md-menu-divider
@@ -28,6 +28,10 @@ block body
                         h3
                             span MENU
                 md-list(flex)
-                    md-list-item(ng-repeat='menuItem in app.menuItems' ng-href='{{ menuItem.url }}')
+                    md-list-item(
+                        ng-repeat='menuItem in app.menuItems'
+                        ng-href='{{ menuItem.url }}',
+                        ng-show='!menuItem.requiredPermission || permissions[menuItem.requiredPermission]')
+
                         h3.md-title {{ menuItem.label }}
             md-content(ng-view, autoscroll, flex)

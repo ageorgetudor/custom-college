@@ -9,26 +9,24 @@
 
 		vm.save = save;
 		vm.cancel = $mdDialog.cancel;
-		vm.isCreate = user == undefined;
-		vm.remove = remove;
 		vm.user = user || {};
 
 		getRoles().then(generateSelectedRoles);
 
 		function getRoles() {
 			return roleService.getRoles()
-				.then(function(roles) {
+				.then(function (roles) {
 					vm.roles = roles;
 				});
 		}
 
 		function generateSelectedRoles() {
 
-			if (vm.isCreate) return;
+			if (!vm.user.id) return;
 
 			for (var i = 0; i < vm.roles.length; i++) {
 				var checkRole = vm.roles[i];
-				var hasRole = vm.user.roles.filter(function(role) {
+				var hasRole = vm.user.roles.filter(function (role) {
 					return role.name == checkRole.name;
 				});
 				if (hasRole.length) {
@@ -53,18 +51,6 @@
 			saveUser.roles = selectedRoles();
 			userService.save(saveUser).then($mdDialog.cancel);
 		}
-
-		function remove() {
-			var confirm = $mdDialog.confirm()
-				.title('Delete User?')
-				.ok('Delete')
-				.cancel('Cancel');
-
-			$mdDialog.show(confirm).then(function() {
-				userService.remove(vm.user).then(goBack);
-			});
-		}
-
 	}
 
 })();

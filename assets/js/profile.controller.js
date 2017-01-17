@@ -7,6 +7,7 @@
 		var vm = this;
 
 		vm.isProfile = true;
+		vm.cancel = $mdDialog.cancel;
 		vm.save = save;
 
 		userService.getMe().then(function(user) {
