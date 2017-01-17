@@ -19,7 +19,6 @@
 			saveUser.roles = undefined;
 			userService.save(saveUser).then(function() {
 				$rootScope.currentUser = angular.copy(vm.user);
-				$rootScope.userFullName = vm.user.name;
 				$mdDialog.cancel();
 			});
 		}

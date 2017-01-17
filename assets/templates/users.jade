@@ -9,18 +9,30 @@
                 label Email
                 input(type='text', ng-model='vm.emailFilter', ng-change='vm.filterChanged()')
             md-input-container.input(flex='20')
-                label User Name
+                label Username
                 input(type='text', ng-model='vm.usernameFilter', ng-change='vm.filterChanged()')
             md-input-container(flex='20')
-                label Role
+                label Roles
                 md-select(ng-model='vm.roleFilter', ng-change='vm.filterChanged()')
                     md-option(value='{{ null }}') None
-                    md-option(ng-repeat='role in vm.roles', ng-value='role.id') {{ role.name | capitalize:true }}
+                    md-option(ng-repeat='role in vm.roles', ng-value='role.id', ng-if='role.name != "registered"') {{ role.name | capitalize:true }}
 
-        md-list-item(layout='row', ng-repeat='user in vm.users', ng-href='', ng-click='vm.edit($event, user)')
+        md-list-item(
+        layout='row',
+        ng-repeat='user in vm.users',
+        ng-href='',
+        ng-click='vm.edit($event, user)',
+        ng-mouseenter='showDelete = true',
+        ng-mouseleave='showDelete = false')
+
             div(flex='20') {{ user.name }}
             div(flex='40') {{ user.email }}
             div(flex='20') {{ user.username }}
-            div(flex='20') {{ vm.rolesForUser(user) | capitalize:true }}
+            div(flex='20', layout='row', layout-align='left center')
+                span {{ vm.rolesForUser(user) | capitalize:true }}
+                span(flex)
+                md-button.md-icon-button.md-mini(ng-click='vm.remove(user)', ng-show='showDelete')
+                    md-icon(md-svg-icon='images/delete.svg')
+
 
     a.md-button.md-primary.md-raised(ng-click='vm.edit($event)') Create New User

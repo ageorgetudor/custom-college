@@ -20,7 +20,9 @@
 		});
 
 		function rolesForUser(user) {
-			return user.roles.map(function (role) {
+			return user.roles.filter(function(role) {
+				return role.name != 'registered';
+			}).map(function (role) {
 				return role.name;
 			}).join(', ')
 		}
