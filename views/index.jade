@@ -2,7 +2,7 @@ extends ./layout
 
 block body
     .index
-        md-toolbar.md-whiteframe-4dp
+        md-toolbar(md-whiteframe='4')
             .md-toolbar-tools
                 md-button.md-icon-button(aria-label='Show Menu', ng-click='app.toggleSideMenu()')
                     md-icon(md-svg-icon='images/menu.svg')
@@ -22,8 +22,8 @@ block body
                             md-button(ng-click='app.logout()') Sign Out
 
         div(flex, layout='row')
-            md-sidenav(md-component-id='menu', ng-click='app.toggleSideMenu()')
-                md-toolbar.md-whiteframe-4dp
+            md-sidenav.md-sidenav-left(md-component-id='menu', md-whiteframe="4", ng-click='app.toggleSideMenu()')
+                md-toolbar(md-whiteframe='4')
                     .md-toolbar-tools
                         h3
                             span MENU

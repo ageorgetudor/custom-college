@@ -3,7 +3,7 @@ extends ./layout
 block body
     md-content.login(ng-controller='LoginController as vm', ng-cloak, layout='column', layout-align='top center', layout-fill, md-theme="white-background")
 
-        .login-box.md-whiteframe-4dp
+        .login-box(md-whiteframe='4')
             md-toolbar
                 .md-toolbar-tools
                     h3
